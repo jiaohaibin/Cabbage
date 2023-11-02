@@ -18,15 +18,27 @@ open class VideoCompositor: NSObject, AVFoundation.AVVideoCompositing  {
     private var shouldCancelAllRequests = false
     private var renderContext: AVVideoCompositionRenderContext?
     
+#if targetEnvironment(macCatalyst)
+    public var sourcePixelBufferAttributes: [String : Any]? =
+        [String(kCVPixelBufferPixelFormatTypeKey): kCVPixelFormatType_420YpCbCr8BiPlanarFullRange,
+         String(kCVPixelBufferMetalCompatibilityKey): true]
+#else
     public var sourcePixelBufferAttributes: [String : Any]? =
         [String(kCVPixelBufferPixelFormatTypeKey): kCVPixelFormatType_420YpCbCr8BiPlanarFullRange,
          String(kCVPixelBufferOpenGLESCompatibilityKey): true,
          String(kCVPixelBufferMetalCompatibilityKey): true]
+#endif
     
+#if targetEnvironment(macCatalyst)
+    public var requiredPixelBufferAttributesForRenderContext: [String : Any] =
+        [String(kCVPixelBufferPixelFormatTypeKey): kCVPixelFormatType_32BGRA,
+         String(kCVPixelBufferMetalCompatibilityKey): true]
+#else
     public var requiredPixelBufferAttributesForRenderContext: [String : Any] =
         [String(kCVPixelBufferPixelFormatTypeKey): kCVPixelFormatType_32BGRA,
          String(kCVPixelBufferOpenGLESCompatibilityKey): true,
          String(kCVPixelBufferMetalCompatibilityKey): true]
+#endif
     
     open func renderContextChanged(_ newRenderContext: AVVideoCompositionRenderContext) {
         renderContextQueue.sync(execute: { [weak self] in

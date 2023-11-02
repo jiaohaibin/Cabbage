@@ -13,6 +13,12 @@ public struct VideoConfigurationEffectInfo {
     public var time = CMTime.zero
     public var renderSize = CGSize.zero
     public var timeRange = CMTimeRange.zero
+    
+    public init(time: CMTime, renderSize: CGSize, timeRange: CMTimeRange) {
+        self.time = time
+        self.renderSize = renderSize
+        self.timeRange = timeRange
+    }
 }
 
 public protocol VideoConfigurationProtocol: NSCopying {

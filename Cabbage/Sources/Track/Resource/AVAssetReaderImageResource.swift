@@ -87,9 +87,14 @@ open class AVAssetReaderImageResource: ImageResource {
             asset.tracks(withMediaType: .video).count > 0 else {
                 return
         }
+#if targetEnvironment(macCatalyst)
+        let outputSettings: [String : Any] =
+            [String(kCVPixelBufferPixelFormatTypeKey): kCVPixelFormatType_32BGRA]
+#else
         let outputSettings: [String : Any] =
             [String(kCVPixelBufferPixelFormatTypeKey): kCVPixelFormatType_32BGRA,
              String(kCVPixelBufferOpenGLESCompatibilityKey): true]
+#endif
         let trackOutput: AVAssetReaderOutput = {
             if let videoComposition = self.videoComposition {
                 let tracks = asset.tracks(withMediaType: .video)
