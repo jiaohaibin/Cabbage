@@ -8,7 +8,7 @@
 
 import AVFoundation
 
-public class CompositionGenerator {
+public class CompositionGenerator: NSObject, AVVideoCompositionValidationHandling {
     
     // MARK: - Public
     public var timeline: Timeline {
@@ -242,6 +242,15 @@ public class CompositionGenerator {
         videoComposition.renderSize = self.timeline.renderSize
         videoComposition.instructions = instructions
         videoComposition.customVideoCompositorClass = VideoCompositor.self
+        
+        videoComposition.determineValidity(for: self.composition, timeRange: CMTimeRange(start: .zero, duration: self.composition!.duration), validationDelegate: self) { finish, error in
+            if let error = error {
+                NSLog("composition determineValidity, finish = \(finish), error = \(error.localizedDescription)")
+            } else {
+                NSLog("composition determineValidity, finish = \(finish), no error")
+            }
+        }
+        
         self.videoComposition = videoComposition
         self.needRebuildVideoComposition = false
         return videoComposition
@@ -388,6 +397,26 @@ public class CompositionGenerator {
             self.track = track
             self.info = info
         }
+    }
+    
+    public func videoComposition(_ videoComposition: AVVideoComposition, shouldContinueValidatingAfterFindingEmptyTimeRange timeRange: CMTimeRange) -> Bool {
+        NSLog("composition invalid: emptyTimeRange = \(timeRange)")
+        return true
+    }
+    
+    public func videoComposition(_ videoComposition: AVVideoComposition, shouldContinueValidatingAfterFindingInvalidTimeRangeIn videoCompositionInstruction: AVVideoCompositionInstructionProtocol) -> Bool {
+        NSLog("composition invalid: InvalidTimeRangeIn instruction = \(videoCompositionInstruction)")
+        return true
+    }
+
+    public func videoComposition(_ videoComposition: AVVideoComposition, shouldContinueValidatingAfterFindingInvalidValueForKey key: String) -> Bool {
+        NSLog("composition invalid: InvalidValueForKey key = \(key)")
+        return true
+    }
+    
+    public func videoComposition(_ videoComposition: AVVideoComposition, shouldContinueValidatingAfterFindingInvalidTrackIDIn videoCompositionInstruction: AVVideoCompositionInstructionProtocol, layerInstruction: AVVideoCompositionLayerInstruction, asset: AVAsset) -> Bool {
+        NSLog("composition invalid: InvalidTrackIDIn instruction = \(videoCompositionInstruction)")
+        return true
     }
     
 }
