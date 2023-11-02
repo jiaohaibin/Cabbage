@@ -13,7 +13,8 @@ open class VideoCompositor: NSObject, AVFoundation.AVVideoCompositing  {
     
     public static var ciContext: CIContext = CIContext()
     private let renderContextQueue: DispatchQueue = DispatchQueue(label: "cabbage.videocore.rendercontextqueue")
-    private let renderingQueue: DispatchQueue = DispatchQueue(label: "cabbage.videocore.renderingqueue")
+    //private let renderingQueue: DispatchQueue = DispatchQueue(label: "cabbage.videocore.renderingqueue")
+    private let renderingQueue: DispatchQueue = DispatchQueue(label: "cabbage.videocore.renderingqueue", attributes: [.concurrent])
     private var renderContextDidChange = false
     private var shouldCancelAllRequests = false
     private var renderContext: AVVideoCompositionRenderContext?
