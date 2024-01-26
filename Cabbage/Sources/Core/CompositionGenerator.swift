@@ -243,12 +243,16 @@ public class CompositionGenerator: NSObject, AVVideoCompositionValidationHandlin
         videoComposition.instructions = instructions
         videoComposition.customVideoCompositorClass = VideoCompositor.self
         
-        videoComposition.determineValidity(for: self.composition, timeRange: CMTimeRange(start: .zero, duration: self.composition!.duration), validationDelegate: self) { finish, error in
-            if let error = error {
-                NSLog("composition determineValidity, finish = \(finish), error = \(error.localizedDescription)")
-            } else {
-                NSLog("composition determineValidity, finish = \(finish), no error")
+        if #available(iOS 16.0, *) {
+            videoComposition.determineValidity(for: self.composition, timeRange: CMTimeRange(start: .zero, duration: self.composition!.duration), validationDelegate: self) { finish, error in
+                if let error = error {
+                    NSLog("composition determineValidity, finish = \(finish), error = \(error.localizedDescription)")
+                } else {
+                    NSLog("composition determineValidity, finish = \(finish), no error")
+                }
             }
+        } else {
+            // Fallback on earlier versions
         }
         
         self.videoComposition = videoComposition
