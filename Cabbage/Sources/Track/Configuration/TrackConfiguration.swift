@@ -83,10 +83,10 @@ public class VideoConfiguration: NSObject, VideoConfigurationProtocol {
             finalImage = finalImage.transformed(by: transform) //.cropped(to: frame)
             break
         case .custom:
-//            var transform = CGAffineTransform(scaleX: frame.size.width / sourceImage.extent.size.width, y: frame.size.height / sourceImage.extent.size.height)
-//            let translateTransform = CGAffineTransform.init(translationX: frame.origin.x, y: frame.origin.y)
-//            transform = transform.concatenating(translateTransform)
-//            finalImage = finalImage.transformed(by: transform)
+            var transform = CGAffineTransform(scaleX: frame.size.width / sourceImage.extent.size.width, y: frame.size.height / sourceImage.extent.size.height)
+            let translateTransform = CGAffineTransform.init(translationX: frame.origin.x, y: frame.origin.y)
+            transform = transform.concatenating(translateTransform)
+            finalImage = finalImage.transformed(by: transform)
             break
         }
         
