@@ -138,10 +138,9 @@ public class CompositionGenerator: NSObject, AVVideoCompositionValidationHandlin
         // Reuse trackID, because AVFoundation can only add 16 tracks currently
         
         var overlaysTrackIDs: [Int32] = []
-        var overlayIndex = 0
         timeline.overlays.forEach { (provider) in
             for index in 0..<provider.numberOfVideoTracks() {
-                NSLog("buildComposition overlay \(overlayIndex), provider \(index), time = %.1f, duration = %.1f", provider.startTime.seconds, provider.duration.seconds)
+                
                 let trackID: Int32 = {
                     if let trackID = overlaysTrackIDs.first(where: { (trackID) -> Bool in
                         if let track: AVCompositionTrack = composition.track(withTrackID: trackID) {
@@ -159,16 +158,13 @@ public class CompositionGenerator: NSObject, AVVideoCompositionValidationHandlin
                                     }
                                 }
                             }
-                            return false
+                            return true
                         }
                         return false
                     }) {
-                        NSLog("buildComposition trackID = \(trackID)")
                         return trackID;
                     }
-                    let nextTrackID = generateNextTrackID()
-                    NSLog("buildComposition nextTrackID = \(nextTrackID)")
-                    return nextTrackID
+                    return generateNextTrackID()
                 }()
                 
                 if let compositionTrack = provider.videoCompositionTrack(for: composition, at: index, preferredTrackID: trackID) {
@@ -179,20 +175,7 @@ public class CompositionGenerator: NSObject, AVVideoCompositionValidationHandlin
                 if !overlaysTrackIDs.contains(trackID) {
                     overlaysTrackIDs.append(trackID);
                 }
-                
-                for overlaysTrackID in overlaysTrackIDs {
-                    NSLog("buildComposition overlaysTrackID = \(overlaysTrackID)")
-                }
-                
-                var trackInfoIndex = 0
-                for trackInfo in overlayTrackInfo {
-                    if let provider = trackInfo as? VideoProvider {
-                        NSLog("buildComposition trackInfo \(trackInfoIndex) time = %.1f, duration = %.1f", provider.startTime.seconds, provider.duration.seconds)
-                    }
-                    trackInfoIndex += 1
-                }
             }
-            overlayIndex += 1
         }
         
         timeline.audios.forEach { (provider) in
