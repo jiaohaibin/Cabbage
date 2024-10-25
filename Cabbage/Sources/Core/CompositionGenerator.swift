@@ -156,6 +156,9 @@ public class CompositionGenerator: NSObject, AVVideoCompositionValidationHandlin
                                     if intersection.duration.seconds > 0 {
                                         return false
                                     }
+                                    if CMTimeCompare(segment.timeMapping.target.end, provider.timeRange.start) == 0 {
+                                        return false
+                                    }
                                 }
                             }
                             return true
