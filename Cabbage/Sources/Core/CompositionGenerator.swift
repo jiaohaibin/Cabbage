@@ -222,6 +222,11 @@ public class CompositionGenerator: NSObject, AVVideoCompositionValidationHandlin
             layerInstructions.append(layerInstruction)
         }
         
+        var layerInstructionsOrderMap = [ObjectIdentifier : Int]()
+        for (i, layerInstruction) in layerInstructions.enumerated() {
+            layerInstructionsOrderMap[ObjectIdentifier(layerInstruction)] = i
+        }
+        
         layerInstructions.sort { (left, right) -> Bool in
             return left.timeRange.start < right.timeRange.start
         }
@@ -234,7 +239,9 @@ public class CompositionGenerator: NSObject, AVVideoCompositionValidationHandlin
             let trackIDs = slice.1.map({ $0.trackID })
             let instruction = VideoCompositionInstruction(theSourceTrackIDs: trackIDs as [NSValue], forTimeRange: slice.0)
             instruction.backgroundColor = timeline.backgroundColor
-            instruction.layerInstructions = slice.1
+            instruction.layerInstructions = slice.1.sorted(by: { left, right in
+                return layerInstructionsOrderMap[ObjectIdentifier(left)]! < layerInstructionsOrderMap[ObjectIdentifier(right)]!
+            })
             instruction.passingThroughVideoCompositionProvider = timeline.passingThroughVideoCompositionProvider
             instruction.mainTrackIDs = mainTrackIDs.filter({ trackIDs.contains($0) })
             return instruction
