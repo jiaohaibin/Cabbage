@@ -257,8 +257,6 @@ public class CompositionGenerator: NSObject, AVVideoCompositionValidationHandlin
             videoComposition.determineValidity(for: self.composition, timeRange: CMTimeRange(start: .zero, duration: self.composition!.duration), validationDelegate: self) { finish, error in
                 if let error = error {
                     NSLog("composition determineValidity, finish = \(finish), error = \(error.localizedDescription)")
-                } else {
-                    NSLog("composition determineValidity, finish = \(finish), no error")
                 }
             }
         } else {
