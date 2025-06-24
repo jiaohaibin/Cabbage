@@ -25,7 +25,7 @@ public protocol VideoConfigurationProtocol: NSCopying {
     func applyEffect(to sourceImage: CIImage, info: VideoConfigurationEffectInfo) -> CIImage
 }
 
-public class VideoConfiguration: NSObject, VideoConfigurationProtocol {
+open class VideoConfiguration: NSObject, VideoConfigurationProtocol {
     
     public static func createDefaultConfiguration() -> VideoConfiguration {
         return VideoConfiguration()
@@ -61,7 +61,7 @@ public class VideoConfiguration: NSObject, VideoConfigurationProtocol {
     
     // MARK: - VideoConfigurationProtocol
     
-    public func applyEffect(to sourceImage: CIImage, info: VideoConfigurationEffectInfo) -> CIImage {
+    open func applyEffect(to sourceImage: CIImage, info: VideoConfigurationEffectInfo) -> CIImage {
         var finalImage = sourceImage
 
         if let userTransform = self.transform {
