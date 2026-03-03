@@ -124,12 +124,12 @@ open class TrackItem: NSObject, NSCopying, TransitionableVideoProvider, Transiti
     open func configure(audioMixParameters: AVMutableAudioMixInputParameters) {
         let volume = audioConfiguration.volume
         audioMixParameters.setVolumeRamp(fromStartVolume: volume, toEndVolume: volume, timeRange: timeRange)
-        if audioConfiguration.nodes.count > 0 {
+        //if audioConfiguration.nodes.count > 0 {
             if audioMixParameters.audioProcessingTapHolder == nil {
                 audioMixParameters.audioProcessingTapHolder = AudioProcessingTapHolder()
             }
             audioMixParameters.audioProcessingTapHolder?.audioProcessingChain.nodes.append(contentsOf: audioConfiguration.nodes)
-        }
+        //}
     }
     
     
